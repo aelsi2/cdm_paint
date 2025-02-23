@@ -1,7 +1,3 @@
 llvm-project-cdm/
 build/
 .*
-*.img
-*.ll
-*.s
-!main.s
