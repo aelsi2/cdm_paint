@@ -1,4 +1,5 @@
 llvm-project-cdm/
+build/
 .*
 *.img
 *.ll

@@ -23,7 +23,7 @@ $(ASMS): %.c.s: %.c.ll
 
 $(OBJS): $(BUILD_DIR)/%.c.ll: %.c
 	mkdir -p $(dir $@)
-	./llvm-project-cdm/build/bin/clang -target cdm -O2 -S -emit-llvm $< -o $@
+	./llvm-project-cdm/build/bin/clang -target cdm -O2 -S -emit-llvm $< -o $@ -MMD -MP
 
 .PHONY: clean
 clean:
