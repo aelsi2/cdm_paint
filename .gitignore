@@ -1,5 +1,5 @@
 llvm-project-cdm/
-.venv/
+.*
 *.img
 *.ll
 *.s
