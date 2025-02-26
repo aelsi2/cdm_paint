@@ -30,10 +30,10 @@ $(OBJS): $(BUILD_DIR)/%.c.ll: %.c
 	$(CC) $(CFLAGS) $< -o $@
 
 $(VENV_DIR)/bin/cocas: $(VENV_DIR)
-	$(VENV_DIR)/bin/pip install cdm-devkit
+	$(VENV_DIR)/bin/pip3 install cdm-devkit
 
 $(VENV_DIR):
-	python -m venv $@
+	python3 -m venv $@
 
 .PHONY: clean
 clean:
