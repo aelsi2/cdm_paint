@@ -1,6 +1,5 @@
-kill_beef: ext
-
+main: ext
 asect 0
-    jsr kill_beef
+    jsr main
     halt
 end

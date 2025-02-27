@@ -20,7 +20,7 @@ CFLAGS := $(INC_FLAGS) -MMD -MP -target cdm -O2 -S -emit-llvm
 CC := clang-cdm
 SC := llc-cdm
 
-$(BUILD_DIR)/$(TARGET_IMAGE): $(C_ASMS) $(VENV_DIR)/bin/cocas
+$(BUILD_DIR)/$(TARGET_IMAGE): $(ASMS) $(C_ASMS) $(VENV_DIR)/bin/cocas
 	$(VENV_DIR)/bin/cocas $(filter %.s,$^) $(ENTRY_POINT) -o $@
 
 $(C_ASMS): %.c.s: %.c.ll
