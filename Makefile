@@ -17,13 +17,14 @@ INC_DIRS := $(shell find $(SRC_DIRS) -type d)
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
 CFLAGS := $(INC_FLAGS) -MMD -MP -target cdm -O2 -S -emit-llvm
-CC := ./llvm-project-cdm/build/bin/clang
+CC := clang-cdm
+SC := llc-cdm
 
 $(BUILD_DIR)/$(TARGET_IMAGE): $(C_ASMS) $(VENV_DIR)/bin/cocas
 	$(VENV_DIR)/bin/cocas $(filter %.s,$^) $(ENTRY_POINT) -o $@
 
 $(C_ASMS): %.c.s: %.c.ll
-	./llvm-project-cdm/build/bin/llc -march=cdm $< -o $@
+	$(SC) -march=cdm $< -o $@
 
 $(OBJS): $(BUILD_DIR)/%.c.ll: %.c
 	mkdir -p $(dir $@)
