@@ -9,5 +9,6 @@ typedef enum : unsigned char {
 } color_t;
 
 void draw_pattern(block_t pattern, int index, color_t color);
+void draw_horizontal_line(int start, int end, color_t color);
 void clear(color_t color);
 void update_screen();
