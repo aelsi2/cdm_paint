@@ -9,19 +9,33 @@ extern void write_row(char index, block_t block1, block_t block2);
 extern void write_buffer(block_t *buffer);
 
 void draw_pattern(block_t pattern, int index, color_t color) {
-    if (color == COLOR_WHITE) {
-        frame_buffer[index] |= pattern;
-    } else {
-        frame_buffer[index] &= ~pattern;
+    switch (color) {
+        case COLOR_INVERT:
+            frame_buffer[index] ^= pattern;
+            return;
+        case COLOR_WHITE:
+            frame_buffer[index] |= pattern;
+            return;
+        case COLOR_BLACK:
+            frame_buffer[index] &= ~pattern;
+            return;
     }
 }
 
 void clear(color_t color) {
     block_t block;
-    if (color == COLOR_WHITE) {
-        block = 0xFFFF;
-    } else {
-        block = 0x0000;
+    switch (color) {
+        case COLOR_INVERT:
+            for (int i = 0; i < FRAME_BUFFER_SIZE; i++) {
+                frame_buffer[i] = ~frame_buffer[i];
+            }
+            return;
+        case COLOR_BLACK:
+            block = 0x0000;
+            break;
+        case COLOR_WHITE:
+            block = 0xFFFF;
+            break;
     }
     for (int i = 0; i < FRAME_BUFFER_SIZE; i++) {
         frame_buffer[i] = block;
