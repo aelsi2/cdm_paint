@@ -22,9 +22,6 @@ extern void write_buffer(block_t *buffer);
 
 void draw_pattern(block_t pattern, int index, color_t color) {
     switch (color) {
-        case COLOR_INVERT:
-            frame_buffer[index] ^= pattern;
-            return;
         case COLOR_WHITE:
             frame_buffer[index] |= pattern;
             return;
@@ -53,11 +50,6 @@ void draw_horizontal_line(int start, int end, color_t color) {
 void clear(color_t color) {
     block_t block;
     switch (color) {
-        case COLOR_INVERT:
-            for (int i = 0; i < FRAME_BUFFER_SIZE; i++) {
-                frame_buffer[i] = ~frame_buffer[i];
-            }
-            return;
         case COLOR_BLACK:
             block = 0x0000;
             break;

@@ -23,7 +23,7 @@ void main() {
     clear(COLOR_WHITE);
     update_screen();
     for (int i = 0; i < 64; i++) {
-        draw_pattern(i + 1, i, COLOR_INVERT);
+        draw_pattern(i + 1, i, COLOR_BLACK);
     }
     update_screen();
 }
