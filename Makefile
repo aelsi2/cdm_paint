@@ -1,6 +1,5 @@
 TARGET_IMAGE := cdm_paint.img
 
-
 SRC_DIRS := ./src
 SRCS := $(shell find $(SRC_DIRS) -name '*.c')
 ASMS := $(shell find $(SRC_DIRS) -name '*.s')
@@ -8,10 +7,10 @@ ASMS := $(shell find $(SRC_DIRS) -name '*.s')
 BUILD_DIR := ./build
 VENV_DIR := $(BUILD_DIR)/.venv
 
-OBJS := $(SRCS:%=$(BUILD_DIR)/%.ll)
+IRS := $(SRCS:%=$(BUILD_DIR)/%.ll)
 C_ASMS := $(SRCS:%=$(BUILD_DIR)/%.s)
 
-DEPS := $(OBJS:.ll=.d)
+DEPS := $(IRS:.ll=.d)
 
 INC_DIRS := $(shell find $(SRC_DIRS) -type d)
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
@@ -26,7 +25,7 @@ $(BUILD_DIR)/$(TARGET_IMAGE): $(ASMS) $(C_ASMS) $(VENV_DIR)/bin/cocas
 $(C_ASMS): %.c.s: %.c.ll
 	$(SC) -march=cdm $< -o $@
 
-$(OBJS): $(BUILD_DIR)/%.c.ll: %.c
+$(IRS): $(BUILD_DIR)/%.c.ll: %.c
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $< -o $@
 
