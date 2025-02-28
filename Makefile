@@ -5,10 +5,10 @@ TARGET_IMAGE := $(BUILD_DIR)/cdm_paint.img
 COMPILE_COMMANDS := compile_commands.json
 
 SRCS := $(shell find $(SRC_DIRS) -name '*.c')
-ASMS := $(shell find $(SRC_DIRS) -name '*.s')
+ASMS := $(shell find $(SRC_DIRS) -name '*.asm')
 
 IRS := $(SRCS:%=$(BUILD_DIR)/%.ll)
-C_ASMS := $(SRCS:%=$(BUILD_DIR)/%.s)
+C_ASMS := $(SRCS:%=$(BUILD_DIR)/%.asm)
 DEPS := $(IRS:.ll=.d)
 COMMANDS := $(SRCS:%=$(BUILD_DIR)/%.ll.command)
 
@@ -28,9 +28,9 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 $(TARGET_IMAGE): $(ASMS) $(C_ASMS) $(VENV_DIR)/bin/cocas
-	$(VENV_DIR)/bin/cocas $(filter %.s,$^) $(ENTRY_POINT) -o $@
+	$(VENV_DIR)/bin/cocas $(filter %.asm,$^) $(ENTRY_POINT) -o $@
 
-$(C_ASMS): %.c.s: %.c.ll
+$(C_ASMS): %.c.asm: %.c.ll
 	$(SC) -march=cdm $< -o $@
 
 $(IRS): $(BUILD_DIR)/%.c.ll: %.c
