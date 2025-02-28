@@ -6,6 +6,7 @@
 static block_t frame_buffer[FRAME_BUFFER_SIZE];
 
 extern void write_row(char index, block_t block1, block_t block2);
+extern void write_buffer(block_t *buffer);
 
 void draw_pattern(block_t pattern, int index, color_t color) {
     if (color == COLOR_WHITE) {
@@ -28,12 +29,7 @@ void clear(color_t color) {
 }
 
 void update_screen() {
-    int row_index = 0;
-    int block_index = 0;
-    while (row_index < ROW_COUNT) {
-        block_t block1 = frame_buffer[block_index++];
-        block_t block2 = frame_buffer[block_index++];
-        write_row(row_index++, block1, block2);
-    }
+    write_buffer(frame_buffer);
+    return;
 }
 
