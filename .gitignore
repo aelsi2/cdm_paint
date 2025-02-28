@@ -1,3 +1,5 @@
 llvm-project-cdm/
 build/
-.ccls-cache
+compile_commands.json
+.*
+!.vscode
