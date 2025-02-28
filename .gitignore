@@ -1,3 +1,3 @@
 llvm-project-cdm/
 build/
-.*
+.ccls-cache
