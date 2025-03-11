@@ -33,3 +33,6 @@ void main() {
     update_screen();
 }
 
+void handle_input() {
+
+}
