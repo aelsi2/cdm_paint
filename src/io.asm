@@ -6,27 +6,20 @@ screen_row_index:
 ds 1
 
 rsect funcs
-# r0: row index, r1: block 1, r2: block 2
-write_row>
-ldi r3, screen_row_index
-st r3, r0
-ldi r3, screen_row
-stw r3, r1
-add r3, 2
-stw r3, r2
-rts
 
-# r0: buffer address
-write_buffer>
+# r0: buffer address, r1: start row index, r2: end row index
+screen_write_range>
 save r4
 save r5
-ldi r1, 0
-ldi r2, 32
+add r1, r0
+add r1, r0
+add r1, r0
+add r1, r0
 ldi r3, screen_row_index
 ldi r4, screen_row
 while
 cmp r1, r2
-stays lo
+stays le
 st r3, r1
 ldw r0, r5
 stw r4, r5
