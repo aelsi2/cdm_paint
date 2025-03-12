@@ -87,7 +87,7 @@ void draw_horizontal_line(point_t start, point_t end, color_t color) {
     int end_block_index = end / BLOCK_SIZE;
     int start_pixel_index = start % BLOCK_SIZE;
     int end_pixel_index = end % BLOCK_SIZE;
-    mark_dirty(get_row(start));
+    mark_dirty(get_y(start));
 
     if (start_block_index == end_block_index) {
         block_t block = masks_left[start_pixel_index] & masks_right[end_pixel_index];
@@ -101,10 +101,10 @@ void draw_horizontal_line(point_t start, point_t end, color_t color) {
 }
 
 void draw_filled_rect(point_t p1, point_t p2, color_t color) {
-    int min_row = min(get_row(p1), get_row(p2));
-    int max_row = max(get_row(p1), get_row(p2));
-    int min_col = min(get_col(p1), get_col(p2));
-    int max_col = max(get_col(p1), get_col(p2));
+    int min_row = min(get_y(p1), get_y(p2));
+    int max_row = max(get_y(p1), get_y(p2));
+    int min_col = min(get_x(p1), get_x(p2));
+    int max_col = max(get_x(p1), get_x(p2));
     mark_dirty_range(min_row, max_row);
     
     if ((min_col < BLOCK_SIZE) == (max_col < BLOCK_SIZE)) {
@@ -128,16 +128,16 @@ void draw_filled_rect(point_t p1, point_t p2, color_t color) {
 }
 
 void draw_outline_rect(point_t p1, point_t p2, color_t color) {
-    int min_row = min(get_row(p1), get_row(p2));
-    int max_row = max(get_row(p1), get_row(p2));
-    int min_col = min(get_col(p1), get_col(p2));
-    int max_col = max(get_col(p1), get_col(p2));
+    int min_row = min(get_y(p1), get_y(p2));
+    int max_row = max(get_y(p1), get_y(p2));
+    int min_col = min(get_x(p1), get_x(p2));
+    int max_col = max(get_x(p1), get_x(p2));
     mark_dirty_range(min_row, max_row);
     
-    draw_horizontal_line(point(min_row, min_col), point(min_row, max_col), color);
-    draw_horizontal_line(point(max_row, min_col), point(max_row, max_col), color);
-    draw_vertical_line(point(min_row, min_col), point(max_row, min_col), color);
-    draw_vertical_line(point(min_row, max_col), point(max_row, max_col), color);
+    draw_horizontal_line(point(min_col, min_row), point(max_col, min_row), color);
+    draw_horizontal_line(point(min_col, max_row), point(max_col, max_row), color);
+    draw_vertical_line(point(min_col, min_row), point(min_col, max_row), color);
+    draw_vertical_line(point(max_col, min_row), point(max_col, max_row), color);
 }
 
 extern void screen_write_range(block_t *buffer, int start_row, int end_row);

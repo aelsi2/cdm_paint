@@ -16,9 +16,9 @@ typedef int point_t;
 #define BLOCK_SIZE (sizeof(block_t) * 8)
 #define BLOCKS_PER_ROW (SCREEN_WIDTH / BLOCK_SIZE)
 
-#define point(row, col) ((row) * SCREEN_WIDTH + (col))
-#define get_row(point) ((point) / SCREEN_WIDTH)
-#define get_col(point) ((point) % SCREEN_WIDTH)
+#define point(x, y) ((x) + (y) * SCREEN_WIDTH)
+#define get_x(point) ((point) % SCREEN_WIDTH)
+#define get_y(point) ((point) / SCREEN_WIDTH)
 
 extern block_t frame_buffer[FRAME_BUFFER_SIZE];
 
