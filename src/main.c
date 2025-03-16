@@ -2,6 +2,7 @@
 
 #pragma clang diagnostic ignored "-Wmain-return-type"
 void main() {
+    while(1);
     clear(COLOR_WHITE);
     update_screen();
     draw_filled_rect(point(3, 3), point(28, 28), COLOR_BLACK);
@@ -16,6 +17,8 @@ void main() {
     update_screen();
 }
 
+extern char joy;
 void handle_input() {
-
+    draw_pixel(joy, COLOR_WHITE);
+    update_screen();
 }

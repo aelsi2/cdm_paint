@@ -4,6 +4,8 @@ screen_row:
 ds 4
 screen_row_index:
 ds 1
+joy>
+ds 1
 
 rsect funcs
 
