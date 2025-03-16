@@ -24,7 +24,8 @@ asm_handler>
 halt
 
 asm_input>
-jsr handle_input
+ldi r0,0xdead
+#jsr handle_input
 halt
 
 end.
