@@ -25,6 +25,6 @@ halt
 
 asm_input>
 jsr handle_input
-halt
+rti
 
 end.
