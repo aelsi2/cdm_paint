@@ -25,22 +25,42 @@ halt
 
 asm_handler1>
 ldi r0, 0xDED1
+pop r1
 halt
 
 asm_handler2>
 ldi r0, 0xDED2
+pop r1
 halt
 
 asm_handler3>
 ldi r0, 0xDED3
+pop r1
 halt
 
 asm_handler4>
 ldi r0, 0xDED4
+pop r1
 halt
 
 asm_input>
+save r0
+save r1
+save r2
+save r3
+save r4
+save r5
+save r6
+save r7
 jsr handle_input
+restore
+restore
+restore
+restore
+restore
+restore
+restore
+restore
 rti
 
 end.
