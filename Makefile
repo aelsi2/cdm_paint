@@ -28,7 +28,7 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 $(TARGET_IMAGE): $(ASMS) $(C_ASMS) $(VENV_DIR)/bin/cocas
-	$(VENV_DIR)/bin/cocas $(filter %.asm,$^) $(ENTRY_POINT) -o $@
+	$(VENV_DIR)/bin/cocas $(filter %.asm,$^) -o $@
 
 $(C_ASMS): %.c.asm: %.c.ll
 	$(SC) -march=cdm $< -o $@
