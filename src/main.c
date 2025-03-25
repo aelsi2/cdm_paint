@@ -17,9 +17,9 @@ void main() {
     update_screen();
     dr_draw_filled_rect(pt(3, 3), pt(28, 28), COLOR_BLACK);
     update_screen();
-    dr_draw_line(pt(5, 5), pt(10, 5), COLOR_WHITE);
+    dr_draw_line(pt(5, 7), pt(11, 5), COLOR_WHITE);
     update_screen();
-    dr_draw_line(pt(21, 26), pt(26, 26), COLOR_WHITE);
+    dr_draw_line(pt(20, 26), pt(26, 24), COLOR_WHITE);
     update_screen();
     dr_draw_filled_rect(pt(15, 15), pt(16, 16), COLOR_WHITE);
     update_screen();
