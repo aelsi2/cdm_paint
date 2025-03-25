@@ -1,16 +1,17 @@
-#include "drawing.h"
+#include "drawing/internal.h"
 #include "math.h"
 
-void draw_line(point_t start, point_t end, color_t color){
-    int x0 = get_x(start);
-    int y0 = get_y(start);
-    int x1 = get_x(end);
-    int y1 = get_y(end);
+void dr_draw_line(point_t start, point_t end, color_t color){
+    int x0 = pt_x(start);
+    int y0 = pt_y(start);
+    int x1 = pt_x(end);
+    int y1 = pt_y(end);
+    dri_mark_dirty_range(min(y0, y1), max(y0, y1));
 
     if (x0 == x1) {
-        draw_vertical_line(start, end, color);
+        dri_draw_vertical_line(start, end, color);
     } else if (y0 == y1) {
-        draw_horizontal_line(start, end, color);
+        dri_draw_horizontal_line(start, end, color);
     } else {
         int delta_x = abs(x1 - x0);
         int delta_y = -abs(y1 - y0);
@@ -20,7 +21,7 @@ void draw_line(point_t start, point_t end, color_t color){
         int double_dy = delta_y * 2;
         int error = double_dx + double_dy;
         while (1) {
-            draw_pixel(point(x0, y0), color);
+            dri_draw_pixel(pt(x0, y0), color);
             if (error >= delta_y) {
                 if (x0 == x1) { 
                     break;
