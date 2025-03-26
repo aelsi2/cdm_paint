@@ -1,5 +1,6 @@
 #include "drawing/core.h"
 #include "drawing/lines.h"
+#include "drawing/ellipse.h"
 #include "io.h"
 
 void update_screen() {
@@ -24,6 +25,8 @@ void main() {
     dr_draw_filled_rect(pt(15, 15), pt(16, 16), COLOR_WHITE);
     update_screen();
     dr_draw_outline_rect(pt(13, 13), pt(18, 18), COLOR_WHITE);
+    update_screen();
+    dr_draw_outline_ellipse(pt(15, 15), 7, 7, COLOR_WHITE);
     update_screen();
     while(1);
 }

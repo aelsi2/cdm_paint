@@ -1,5 +1,5 @@
-#include "drawing.h"
 #include "math.h"
+#include "drawing/internal.h"
 #include "ellipse.h"
 
 #define draw_outline_pixels(xc, yc, x, y, color) \
@@ -10,16 +10,16 @@
         int pt_minus_y = (yc) - (y); \
         color_t pt_col = (color); \
         if (pt_plus_x < SCREEN_WIDTH && pt_plus_y < SCREEN_HEIGHT) { \
-            draw_pixel(point(pt_plus_x, pt_plus_y), pt_col); \
+            dri_draw_pixel(pt(pt_plus_x, pt_plus_y), pt_col); \
         } \
         if (pt_minus_x >= 0 && pt_plus_y < SCREEN_HEIGHT) { \
-            draw_pixel(point(pt_minus_x, pt_plus_y), pt_col); \
+            dri_draw_pixel(pt(pt_minus_x, pt_plus_y), pt_col); \
         } \
         if (pt_plus_x < SCREEN_WIDTH && pt_minus_y >= 0) { \
-            draw_pixel(point(pt_plus_x, pt_minus_y), pt_col); \
+            dri_draw_pixel(pt(pt_plus_x, pt_minus_y), pt_col); \
         } \
         if (pt_minus_x >= 0 && pt_minus_y >= 0) { \
-            draw_pixel(point(pt_minus_x, pt_minus_y), pt_col); \
+            dri_draw_pixel(pt(pt_minus_x, pt_minus_y), pt_col); \
         } \
     } while (0)
 
@@ -33,16 +33,17 @@
         pt_minus_x = max(pt_minus_x, 0); \
         color_t pt_col = (color); \
         if (pt_plus_y < SCREEN_HEIGHT) { \
-            draw_horizontal_line(point(pt_minus_x, pt_plus_y), point(pt_plus_x, pt_plus_y), pt_col); \
+            dri_draw_horizontal_line(pt(pt_minus_x, pt_plus_y), pt(pt_plus_x, pt_plus_y), pt_col); \
         } \
         if (pt_minus_y >= 0) { \
-            draw_horizontal_line(point(pt_minus_x, pt_minus_y), point(pt_plus_x, pt_minus_y), pt_col); \
+            dri_draw_horizontal_line(pt(pt_minus_x, pt_minus_y), pt(pt_plus_x, pt_minus_y), pt_col); \
         } \
     } while (0)
 
-void draw_outline_ellipse(point_t center, int rx, int ry, color_t color) {
-    int xc = get_x(center);
-    int yc = get_y(center);
+void dr_draw_outline_ellipse(point_t center, int rx, int ry, color_t color) {
+    int xc = pt_x(center);
+    int yc = pt_y(center);
+    dri_mark_dirty_range(max(yc - ry, 0), min(yc + ry, SCREEN_HEIGHT - 1));
 
     int x = 0;
     int y = ry;
@@ -92,9 +93,10 @@ void draw_outline_ellipse(point_t center, int rx, int ry, color_t color) {
     }
 }
 
-void draw_filled_ellipse(point_t center, int rx, int ry, color_t color) {
-    int xc = get_x(center);
-    int yc = get_y(center);
+void dr_draw_filled_ellipse(point_t center, int rx, int ry, color_t color) {
+    int xc = pt_x(center);
+    int yc = pt_y(center);
+    dri_mark_dirty_range(max(yc - ry, 0), min(yc + ry, SCREEN_HEIGHT - 1));
 
     int x = 0;
     int y = ry;
