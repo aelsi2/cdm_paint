@@ -1,5 +1,6 @@
 #include "drawing.h"
 #include "lines.h"
+#include "ellipse.h"
 
 #pragma clang diagnostic ignored "-Wmain-return-type"
 void main() {
@@ -8,6 +9,7 @@ void main() {
     draw_line(point(3,28), point(28,28), COLOR_WHITE);
     draw_line(point(3,3), point(15,28), COLOR_WHITE);
     draw_line(point(16,28), point(28,3), COLOR_WHITE);
+    draw_ellipse(point(15,15), point(25,15), point(15,25), COLOR_WHITE);
     update_screen();
     /* clear(COLOR_WHITE);
     update_screen();
