@@ -9,6 +9,16 @@ ds 1
 
 rsect funcs
 
+# r0: first half, r1: second half, r2: row index
+screen_write_row>
+ldi r3, screen_row_index
+st r3, r2
+ldi r3, screen_row
+stw r3, r0
+add r3, 2
+stw r3, r1
+rts
+
 # r0: buffer address, r1: start row index, r2: end row index
 screen_write_range>
 save r4

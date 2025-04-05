@@ -25,3 +25,4 @@ extern volatile const buttons_t joy;
  */
 void screen_write_range(block_t *buffer, int start_row, int end_row);
 
+void screen_write_row(block_t left, block_t right, int row_index);
