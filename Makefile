@@ -60,13 +60,13 @@ $(LOGISIM_PLUGINS): $(LOGISIM_PLUGIN_ARCHIVE)
 	tar -xzOf $^ jar/$(notdir $@) > $@
 
 $(LOGISIM_PLUGIN_ARCHIVE):
-	curl -L $(LOGISIM_PLUGIN_URL) -o $@
+	curl -L $(LOGISIM_PLUGIN_URL) --create-dirs -o $@
 
 $(CC): $(CC_ARCHIVE)
 	bsdtar -xOf $^ clang-cdm-ubuntu-latest/clang-19 > $@
 	chmod uga+x $@
 
 $(CC_ARCHIVE):
-	curl -L $(CC_URL) -o $@
+	curl -L $(CC_URL) --create-dirs -o $@
 
 -include $(DEPS)
