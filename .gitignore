@@ -1,5 +1,6 @@
 llvm-project-cdm/
 build/
 compile_commands.json
+*.jar
 .*
 !.vscode
