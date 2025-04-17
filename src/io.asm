@@ -1,24 +1,26 @@
 asect 0x80
 
-screen_frame_buffer:
-ds 128
-screen_cursor:
-ds 2
+screen_row:
+ds 4
+screen_row_index:
+ds 1
 joy>
 ds 1
+cursor_position:
+ds 2
 
 rsect funcs
 
 screen_write_cursor>
-ldi r1, screen_cursor
+ldi r1, cursor_position
 stw r1, r0
 rts
 
 # r0: first half, r1: second half, r2: row index
 screen_write_row>
-shl r2, 2
-ldi r3, screen_frame_buffer
-add r2, r3
+ldi r3, screen_row_index
+stw r3, r2
+ldi r3, screen_row
 stw r3, r0
 add r3, 2
 stw r3, r1
@@ -26,21 +28,30 @@ rts
 
 # r0: buffer address, r1: start row index, r2: end row index
 screen_write_range>
-shl r1, 2
-shl r2, 2
-ldi r3, screen_frame_buffer
-add r1, r3
-add r0, r1
-add r0, r2
-add r2, 2
-while 
+save r4
+save r5
+add r1, r0
+add r1, r0
+add r1, r0
+add r1, r0
+ldi r3, screen_row_index
+ldi r4, screen_row
+while
 cmp r1, r2
 stays le
-ldw r1, r0
-stw r3, r0
-add r1, 2
-add r3, 2
+st r3, r1
+ldw r0, r5
+stw r4, r5
+add r4, 2
+add r0, 2
+ldw r0, r5
+stw r4, r5
+sub r4, 2
+add r0, 2
+inc r1
 wend
+restore
+restore
 rts
 
 end.
