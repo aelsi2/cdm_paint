@@ -4,13 +4,15 @@ SRC_DIRS := ./src
 VENV_DIR := $(BUILD_DIR)/.venv
 TARGET_IMAGE := $(BUILD_DIR)/cdm_paint.img
 COMPILE_COMMANDS := compile_commands.json
-LOGISIM_PLUGINS += $(LOGISIM_DIR)/logisim-cdm-emulator-0.2.2.jar
-LOGISIM_PLUGINS += $(LOGISIM_DIR)/logisim-banked-memory-0.2.2.jar
+CDM_PLUGINS += $(LOGISIM_DIR)/logisim-cdm-emulator-0.2.2.jar
+CDM_PLUGINS += $(LOGISIM_DIR)/logisim-banked-memory-0.2.2.jar
+TIME_PLUGIN := $(LOGISIM_DIR)/logisim-time-1.1-all.jar
 
-LOGISIM_PLUGIN_URL := https://github.com/cdm-processors/cdm-devkit/releases/download/0.2.2/cdm-devkit-misc-0.2.2.tar.gz
+CDM_PLUGIN_URL := https://github.com/cdm-processors/cdm-devkit/releases/download/0.2.2/cdm-devkit-misc-0.2.2.tar.gz
 CC_URL := https://github.com/leadpogrommer/llvm-project-cdm/releases/download/cdm-ver-1.5/clang-cdm-ubuntu-latest.zip
+TIME_PLUGIN_URL := https://github.com/aelsi2/logisim_time/releases/download/v1.1/logisim-time-1.1-all.jar
 
-LOGISIM_PLUGIN_ARCHIVE := $(BUILD_DIR)/cdm_devkit.tar.gz
+CDM_PLUGIN_ARCHIVE := $(BUILD_DIR)/cdm_devkit.tar.gz
 CC_ARCHIVE := $(BUILD_DIR)/clang-cdm.zip
 
 SRCS := $(shell find $(SRC_DIRS) -name '*.c')
@@ -27,7 +29,7 @@ CFLAGS := $(INC_FLAGS) -MMD -MP -target cdm -O2 -S
 CC := $(BUILD_DIR)/clang-cdm
 
 .PHONY: all
-all: $(TARGET_IMAGE) $(COMPILE_COMMANDS) $(LOGISIM_PLUGINS)
+all: $(TARGET_IMAGE) $(COMPILE_COMMANDS) $(CDM_PLUGINS) $(TIME_PLUGIN)
 
 .PHONY: clean
 clean:
@@ -56,11 +58,14 @@ $(VENV_DIR)/bin/cocas: $(VENV_DIR)
 $(VENV_DIR):
 	python3 -m venv $@
 
-$(LOGISIM_PLUGINS): $(LOGISIM_PLUGIN_ARCHIVE)
+$(CDM_PLUGINS): $(CDM_PLUGIN_ARCHIVE)
 	tar -xzOf $^ jar/$(notdir $@) > $@
 
-$(LOGISIM_PLUGIN_ARCHIVE):
-	curl -L $(LOGISIM_PLUGIN_URL) --create-dirs -o $@
+$(CDM_PLUGIN_ARCHIVE):
+	curl -L $(CDM_PLUGIN_URL) --create-dirs -o $@
+
+$(TIME_PLUGIN):
+	curl -L $(TIME_PLUGIN_URL) --create-dirs -o $@
 
 $(CC): $(CC_ARCHIVE)
 	bsdtar -xOf $^ clang-cdm-ubuntu-latest/clang-19 > $@

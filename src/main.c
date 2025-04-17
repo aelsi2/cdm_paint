@@ -38,47 +38,39 @@ void main() {
     static dr_context_t ctx;
     dr_context = &ctx;
     dr_reset_dirty();
+    dr_draw_outline_ellipse(pt(15,15), 7, 4, COLOR_WHITE);
+    update_screen();
     while(1){
-        if(joy_new == 0){
-            counter = 50;
-            show_cursor(cursor_x, cursor_y);
-            restore_row(cursor_y);
-        }
-        if(counter == 0){
-            if(joy_new & BTN_RIGHT){
-                cursor_x++;
-            }
-            if(joy_new & BTN_LEFT){
-                cursor_x--;
-            }
-            if(joy_new & BTN_DOWN){
-                restore_row(cursor_y);
-                cursor_y++;
-            }
-            if(joy_new & BTN_UP){
-                restore_row(cursor_y);
-                cursor_y--;
-            }
-            if(cursor_x >= SCREEN_WIDTH){
-                cursor_x -= SCREEN_WIDTH;
-            }
-            if(cursor_x < 0){
-                cursor_x += SCREEN_WIDTH;
-            }
-            if(cursor_y >= SCREEN_HEIGHT){
-                restore_row(cursor_y);
-                cursor_y -= SCREEN_HEIGHT;
-            }
-            if(cursor_y < 0){
-                restore_row(cursor_y);
-                cursor_y += SCREEN_HEIGHT;
-            }
-            show_cursor(cursor_x, cursor_y);
-            counter+=3;
-        }
         if(counter > 0){
             counter--;
+            continue;
         }
+        if(joy_new & BTN_RIGHT){
+            cursor_x++;
+        }
+        if(joy_new & BTN_LEFT){
+            cursor_x--;
+        }
+        if(joy_new & BTN_DOWN){
+            cursor_y++;
+        }
+        if(joy_new & BTN_UP){
+            cursor_y--;
+        }
+        if(cursor_x >= SCREEN_WIDTH){
+            cursor_x -= SCREEN_WIDTH;
+        }
+        if(cursor_x < 0){
+            cursor_x += SCREEN_WIDTH;
+        }
+        if(cursor_y >= SCREEN_HEIGHT){
+            cursor_y -= SCREEN_HEIGHT;
+        }
+        if(cursor_y < 0){
+            cursor_y += SCREEN_HEIGHT;
+        }
+        screen_write_cursor(pt(cursor_x, cursor_y));
+        counter+=3;
     };
 }
 
@@ -91,11 +83,9 @@ void handle_input() {
         cursor_x--;
     }
     if(joy_new & BTN_DOWN){
-        restore_row(cursor_y);
         cursor_y++;
     }
     if(joy_new & BTN_UP){
-        restore_row(cursor_y);
         cursor_y--;
     }
     if(cursor_x >= SCREEN_WIDTH){
@@ -110,6 +100,6 @@ void handle_input() {
     if(cursor_y < 0){
         cursor_y += SCREEN_HEIGHT;
     }
-    show_cursor(cursor_x, cursor_y);
+    screen_write_cursor(pt(cursor_x, cursor_y));
     counter = 50;
 }

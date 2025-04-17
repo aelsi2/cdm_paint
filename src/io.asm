@@ -6,13 +6,20 @@ screen_row_index:
 ds 1
 joy>
 ds 1
+cursor_position:
+ds 2
 
 rsect funcs
+
+screen_write_cursor>
+ldi r1, cursor_position
+stw r1, r0
+rts
 
 # r0: first half, r1: second half, r2: row index
 screen_write_row>
 ldi r3, screen_row_index
-st r3, r2
+stw r3, r2
 ldi r3, screen_row
 stw r3, r0
 add r3, 2
