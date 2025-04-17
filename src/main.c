@@ -1,105 +1,87 @@
 #include "drawing/core.h"
-#include "drawing/lines.h"
 #include "drawing/ellipse.h"
 #include "io.h"
 #include "screen.h"
-#include "drawing/internal.h"
 
 int cursor_x = 15;
 int cursor_y = 15;
-int counter = 0;
-buttons_t joy_new = 0;
 
 void update_screen() {
     screen_write_range(dr_context->frame_buffer, dr_context->dirty_start, dr_context->dirty_end);
     dr_reset_dirty();
 }
 
-void show_cursor(int x, int y){
-    block_t left = dr_context->frame_buffer[y * SCREEN_WIDTH / PIXELS_PER_BLOCK];
-    block_t right = dr_context->frame_buffer[y * SCREEN_WIDTH / PIXELS_PER_BLOCK + 1];
-    int mask = dri_mask_pixel[x % PIXELS_PER_BLOCK];
-    if(x < PIXELS_PER_BLOCK){
-        left ^= mask;
-    } else {
-        right ^= mask;
-    }
-    screen_write_row(left, right, y);
-}
-
-void restore_row(int y){
-    block_t left = dr_context->frame_buffer[y * SCREEN_WIDTH / PIXELS_PER_BLOCK];
-    block_t right = dr_context->frame_buffer[y * SCREEN_WIDTH / PIXELS_PER_BLOCK + 1];
-    screen_write_row(left, right, y);
-}
-
 #pragma clang diagnostic ignored "-Wmain-return-type"
 void main() {
+    screen_write_cursor(pt(cursor_x, cursor_y));
     static dr_context_t ctx;
     dr_context = &ctx;
     dr_reset_dirty();
     dr_draw_outline_ellipse(pt(15,15), 7, 4, COLOR_WHITE);
     update_screen();
-    while(1){
-        if(counter > 0){
-            counter--;
-            continue;
-        }
-        if(joy_new & BTN_RIGHT){
-            cursor_x++;
-        }
-        if(joy_new & BTN_LEFT){
-            cursor_x--;
-        }
-        if(joy_new & BTN_DOWN){
-            cursor_y++;
-        }
-        if(joy_new & BTN_UP){
-            cursor_y--;
-        }
-        if(cursor_x >= SCREEN_WIDTH){
-            cursor_x -= SCREEN_WIDTH;
-        }
-        if(cursor_x < 0){
-            cursor_x += SCREEN_WIDTH;
-        }
-        if(cursor_y >= SCREEN_HEIGHT){
-            cursor_y -= SCREEN_HEIGHT;
-        }
-        if(cursor_y < 0){
-            cursor_y += SCREEN_HEIGHT;
-        }
-        screen_write_cursor(pt(cursor_x, cursor_y));
-        counter+=3;
-    };
+    while (1);
 }
 
-void handle_input() {
-    joy_new = joy;
-    if(joy_new & BTN_RIGHT){
-        cursor_x++;
+inline static int get_dir(buttons_t buttons, buttons_t negative, buttons_t positive) {
+    if (buttons & negative) { 
+        return -1;
     }
-    if(joy_new & BTN_LEFT){
-        cursor_x--;
+    if (buttons & positive) {
+        return 1;
     }
-    if(joy_new & BTN_DOWN){
-        cursor_y++;
-    }
-    if(joy_new & BTN_UP){
-        cursor_y--;
-    }
-    if(cursor_x >= SCREEN_WIDTH){
+    return 0;
+}
+
+static void move_cursor(buttons_t buttons) {
+    cursor_x += get_dir(buttons, BTN_LEFT, BTN_RIGHT);
+    cursor_y += get_dir(buttons, BTN_UP, BTN_DOWN);
+    if (cursor_x >= SCREEN_WIDTH) {
         cursor_x -= SCREEN_WIDTH;
     }
-    if(cursor_x < 0){
+    if (cursor_x < 0) {
         cursor_x += SCREEN_WIDTH;
     }
-    if(cursor_y >= SCREEN_HEIGHT){
+    if (cursor_y >= SCREEN_HEIGHT) {
         cursor_y -= SCREEN_HEIGHT;
     }
-    if(cursor_y < 0){
+    if (cursor_y < 0) {
         cursor_y += SCREEN_HEIGHT;
     }
     screen_write_cursor(pt(cursor_x, cursor_y));
-    counter = 50;
+}
+
+#define REPEAT_TRANSITION_MAX 3
+int repeat_transition_counter;
+char is_repeating = 0;
+
+void handle_input() {
+    static buttons_t joy_old = 0;
+    buttons_t joy_new = joy;
+    if (!is_repeating) {
+        move_cursor(joy_new & ~joy_old);
+        repeat_transition_counter = REPEAT_TRANSITION_MAX;
+    }
+    joy_old = joy_new;
+}
+
+void handle_input_repeating() {
+    buttons_t joy_new = joy;
+    if (is_repeating) {
+        move_cursor(joy_new);
+    } else if (!joy_new) {
+        return;
+    } else if (repeat_transition_counter > 0) {
+        repeat_transition_counter--;
+        return;
+    } else {
+        is_repeating = 1;
+    }
+
+    if (joy_new) {
+        repeat_transition_counter = REPEAT_TRANSITION_MAX;
+    } else if (repeat_transition_counter > 0) {
+        repeat_transition_counter--;
+    } else {
+        is_repeating = 0;
+    }
 }
