@@ -1,13 +1,19 @@
 asect 0x80
 
 screen_row:
-ds 4
+ds 4  #0x80
 screen_row_index:
-ds 1
-joy>
-ds 1
+ds 1  #0x84
+timer_enable:
+ds 1  #0x85
 cursor_position:
-ds 2
+ds 2  #0x86
+menu_data:
+ds 1  #0x88
+menu_cursor_position:
+ds 1  #0x89
+joy>
+ds 1  #0x8a
 
 rsect funcs
 
