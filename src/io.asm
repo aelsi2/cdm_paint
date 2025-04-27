@@ -6,19 +6,21 @@ screen_row_index:
 ds 1  #0x84
 timer_enable:
 ds 1  #0x85
-cursor_position:
+cursor1_position:
 ds 2  #0x86
+cursor2_position:
+ds 2  #0x88
 menu_data:
-ds 1  #0x88
-menu_cursor_position:
-ds 1  #0x89
-joy>
 ds 1  #0x8a
+menu_cursor_position:
+ds 1  #0x8b
+joy>
+ds 1  #0x8c
 
 rsect funcs
 
 screen_write_cursor>
-ldi r1, cursor_position
+ldi r1, cursor1_position
 stw r1, r0
 rts
 
