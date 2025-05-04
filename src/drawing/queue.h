@@ -15,7 +15,6 @@ typedef struct {
     color_t color;
     point_t pt1;
     point_t pt2;
-    point_t pt3;
 } shape;
 
 typedef struct { 

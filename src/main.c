@@ -45,7 +45,7 @@ void on_user_input(buttons_t buttons) {
     display_set_primary_cursor(pt(cursor_x, cursor_y));
     
     if(buttons & BTN_A){
-        new_shape = (shape){SHAPE_ELLIPSE,0,COLOR_WHITE,pt(cursor_x,cursor_y),5,5};
+        new_shape = (shape){SHAPE_ELLIPSE,0,COLOR_WHITE,pt(cursor_x,cursor_y), pt(cursor_x + 5, cursor_y + 5)};
         enqueue(&shape_queue, &new_shape);
         update_screen();
     }

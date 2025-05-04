@@ -3,6 +3,7 @@
 #include "lines.h"
 #include "core.h"
 #include "screen.h"
+#include "math.h"
 
 void init_queue(draw_queue* q) {
     q->front = 0;
@@ -18,7 +19,7 @@ void enqueue(draw_queue* q, shape* s) {
     if(is_full(q)){
         return;
     }
-    //q->data[q->rear] = *s;
+    q->data[q->rear] = *s;
     q->rear = (q->rear + 1) % QUEUE_SIZE;
     q->size++;
 }
@@ -46,9 +47,13 @@ void dr_draw_shape(shape* s){
             break;
         case SHAPE_ELLIPSE:
             if(s->filled){
-                dr_draw_filled_ellipse(s->pt1, s->pt2, s->pt3, s->color);
+                int rx = abs(pt_x(s->pt1) - pt_x(s->pt2));
+                int ry = abs(pt_y(s->pt1) - pt_y(s->pt2));
+                dr_draw_filled_ellipse(s->pt1, rx, ry, s->color);
             } else {
-                dr_draw_outline_ellipse(s->pt1, s->pt2, s->pt3, s->color);
+                int rx = abs(pt_x(s->pt1) - pt_x(s->pt2));
+                int ry = abs(pt_y(s->pt1) - pt_y(s->pt2));
+                dr_draw_outline_ellipse(s->pt1, rx, ry, s->color);
             }
             break;
     }
