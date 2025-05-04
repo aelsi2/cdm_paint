@@ -52,7 +52,10 @@ void editor_toggle_mode() {
 
 char editor_needs_secondary_cursor() {
     tool_t tool = editor_state->tool;
-    if (tool == TOOL_CLEAR || tool == TOOL_PIXEL) {
+    if (tool >= TOOL_FLOOD_FILL) {
+        return 0;
+    }
+    if (tool == TOOL_PIXEL) {
         return 0;
     }
     return editor_state->secondary_cursor_pos == EDITOR_CURSOR_UNSET;

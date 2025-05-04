@@ -41,14 +41,14 @@ typedef enum : unsigned char {
     // Draws an ellipse using the midpoint circle algorithm.
     TOOL_ELLIPSE = 3,
 
-    // Fills the entire screen with a color.
-    TOOL_CLEAR = 4,
-
     // Fills a connected area of the same color.
-    TOOL_FLOOD_FILL = 5,
+    TOOL_FLOOD_FILL = 4,
+    
+    // Fills the entire screen with a color.
+    TOOL_CLEAR = 5,
 } tool_t;
 
-#define TOOL_COUNT 5
+#define TOOL_COUNT 6
 
 // Represents a drawable shape.
 typedef struct {

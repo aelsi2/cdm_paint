@@ -2,6 +2,7 @@
 #include "drawing/core.h"
 #include "drawing/ellipse.h"
 #include "drawing/lines.h"
+#include "drawing/flood_fill.h"
 
 void dr_draw_shape(shape_t* s){
     switch (s->tool) {
@@ -25,10 +26,11 @@ void dr_draw_shape(shape_t* s){
                 dr_draw_outline_ellipse(s->pt1, s->pt2, s->color);
             }
             break;
+        case TOOL_FLOOD_FILL:
+            dr_flood_fill(s->pt1, s->color);
+            break;
         case TOOL_CLEAR:
             dr_clear(s->color);
-            break;
-        case TOOL_FLOOD_FILL:
             break;
     }
 }
