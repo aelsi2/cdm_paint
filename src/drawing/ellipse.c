@@ -1,5 +1,6 @@
 #include "drawing/internal.h"
 #include "drawing/ellipse.h"
+#include "drawing/core.h"
 #include "math.h"
 
 #define draw_outline_pixels(xc, yc, x, y, color, x_even, y_even) \
@@ -45,17 +46,20 @@ void dr_draw_outline_ellipse(point_t pt1, point_t pt2, color_t color) {
     int y1 = pt_y(pt1);
     int x2 = pt_x(pt2);
     int y2 = pt_y(pt2);
-
     sort(x1, x2);
     sort(y1, y2);
-
-    int x_even = (x1 ^ x2) & 1;
-    int y_even = (y1 ^ y2) & 1;
 
     int xc = (x1 + x2) / 2;
     int yc = (y1 + y2) / 2;
     int rx = (x2 - x1) / 2;
     int ry = (y2 - y1) / 2;
+    int x_even = (x1 ^ x2) & 1;
+    int y_even = (y1 ^ y2) & 1;
+
+    if (rx == 0 || ry == 0) {
+        dr_draw_filled_rect(pt1, pt2, color);
+        return;
+    }
     dri_mark_dirty_range(y1, y2);
 
     int x = 0;
@@ -111,17 +115,20 @@ void dr_draw_filled_ellipse(point_t pt1, point_t pt2, color_t color) {
     int y1 = pt_y(pt1);
     int x2 = pt_x(pt2);
     int y2 = pt_y(pt2);
-
     sort(x1, x2);
     sort(y1, y2);
-
-    int x_even = (x1 ^ x2) & 1;
-    int y_even = (y1 ^ y2) & 1;
 
     int xc = (x1 + x2) / 2;
     int yc = (y1 + y2) / 2;
     int rx = (x2 - x1) / 2;
     int ry = (y2 - y1) / 2;
+    int x_even = (x1 ^ x2) & 1;
+    int y_even = (y1 ^ y2) & 1;
+
+    if (rx == 0 || ry == 0) {
+        dr_draw_filled_rect(pt1, pt2, color);
+        return;
+    }
     dri_mark_dirty_range(y1, y2);
 
     int x = 0;
