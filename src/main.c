@@ -1,10 +1,14 @@
 #include "drawing/core.h"
 #include "drawing/ellipse.h"
+#include "internal.h"
 #include "io.h"
 #include "screen.h"
+#include "drawing/queue.h"
+#include "cdm.h"
 
 int cursor_x = 15;
 int cursor_y = 15;
+draw_queue shape_queue;
 
 void update_screen() {
     screen_write_range(dr_context->frame_buffer, dr_context->dirty_start, dr_context->dirty_end);
@@ -17,6 +21,7 @@ void main() {
     static dr_context_t ctx;
     dr_context = &ctx;
     dr_reset_dirty();
+    init_queue(&shape_queue);
     dr_draw_outline_ellipse(pt(15,15), 7, 4, COLOR_WHITE);
     update_screen();
     while (1);
@@ -54,6 +59,7 @@ static void move_cursor(buttons_t buttons) {
 int repeat_transition_counter;
 char is_repeating = 0;
 
+shape new_shape;
 void handle_input() {
     static buttons_t joy_old = 0;
     buttons_t joy_new = joy;
@@ -62,6 +68,19 @@ void handle_input() {
         repeat_transition_counter = REPEAT_TRANSITION_MAX;
     }
     joy_old = joy_new;
+
+    if(joy_new & BTN_A){
+        new_shape = (shape){SHAPE_ELLIPSE,0,COLOR_WHITE,pt(cursor_x,cursor_y),5,5};
+        enqueue(&shape_queue, &new_shape);
+        update_screen();
+    }
+    
+    if(joy_new & BTN_B){
+        new_shape = *peek(&shape_queue);
+        dr_draw_shape(&new_shape);
+        dequeue(&shape_queue);
+        update_screen();
+    }
 }
 
 void handle_input_repeating() {
@@ -85,3 +104,5 @@ void handle_input_repeating() {
         is_repeating = 0;
     }
 }
+
+//clear screen function needed
