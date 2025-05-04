@@ -1,7 +1,7 @@
 #include "drawing/shape.h"
 #include "drawing/core.h"
 #include "drawing/ellipse.h"
-#include "drawing/lines.h"
+#include "drawing/line.h"
 #include "drawing/flood_fill.h"
 
 void dr_draw_shape(shape_t* s){
