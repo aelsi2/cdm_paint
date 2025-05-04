@@ -15,6 +15,7 @@ typedef enum : unsigned char {
 
     BTN_DIRECTION = BTN_DOWN | BTN_UP | BTN_LEFT | BTN_RIGHT,
     BTN_ACTION = BTN_A | BTN_B | BTN_L | BTN_R,
+    BTN_LR = BTN_L | BTN_R,
 } buttons_t;
 
 // Gets the horizontal direction (-1, 0 or 1) of the joystick.

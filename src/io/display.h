@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "screen.h"
+#include "graphics.h"
 
 #define DISPLAY_CURSOR_HIDDEN (-1)
 

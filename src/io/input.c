@@ -16,9 +16,11 @@ void on_input_interrupt() {
     buttons_t joy_dirs = joy_pressed & BTN_DIRECTION;
     buttons_t joy_actions = joy_pressed & BTN_ACTION;
 
-    if (!is_repeating && joy_dirs) {
-        on_user_input(joy_dirs);
-        repeat_transition_counter = REPEAT_TRANSITION_MAX;
+    if (joy_dirs) {
+        if (!is_repeating) {
+            on_user_input(joy_dirs);
+            repeat_transition_counter = REPEAT_TRANSITION_MAX;
+        }
         timer_enable();
     }
     if (joy_actions) {

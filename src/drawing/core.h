@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "screen.h"
+#include "graphics.h"
 
 #define DR_BLOCKS_PER_ROW (SCREEN_WIDTH / PIXELS_PER_BLOCK)
 #define DR_FRAME_BUFFER_SIZE ((SCREEN_WIDTH * SCREEN_HEIGHT) / PIXELS_PER_BLOCK)

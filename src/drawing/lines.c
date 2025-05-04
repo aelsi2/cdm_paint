@@ -1,7 +1,10 @@
 #include "drawing/internal.h"
+#include "drawing/lines.h"
 #include "math.h"
 
 void dr_draw_line(point_t start, point_t end, color_t color){
+    sort(start, end);
+
     int x0 = pt_x(start);
     int y0 = pt_y(start);
     int x1 = pt_x(end);
