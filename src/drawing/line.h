@@ -5,4 +5,4 @@
 #include "graphics.h"
 
 // Draws a line between two points using Bresenham's algorithm.
-void dr_draw_line(point_t start, point_t end, color_t color);
+void dr_draw_line(point_t p1, point_t p2, color_t color);

@@ -2,19 +2,19 @@
 #include "drawing/line.h"
 #include "math.h"
 
-void dr_draw_line(point_t start, point_t end, color_t color){
-    sort(start, end);
+void dr_draw_line(point_t p1, point_t p2, color_t color) {
+    sort(p1, p2);
 
-    int x0 = pt_x(start);
-    int y0 = pt_y(start);
-    int x1 = pt_x(end);
-    int y1 = pt_y(end);
+    int x0 = pt_x(p1);
+    int y0 = pt_y(p1);
+    int x1 = pt_x(p2);
+    int y1 = pt_y(p2);
     dri_mark_dirty_range(min(y0, y1), max(y0, y1));
 
     if (x0 == x1) {
-        dri_draw_vertical_line(start, end, color);
+        dri_draw_vertical_line(p1, p2, color);
     } else if (y0 == y1) {
-        dri_draw_horizontal_line(start, end, color);
+        dri_draw_horizontal_line(p1, p2, color);
     } else {
         int delta_x = abs(x1 - x0);
         int delta_y = -abs(y1 - y0);

@@ -41,11 +41,11 @@
         } \
     } while (0)
 
-void dr_draw_outline_ellipse(point_t pt1, point_t pt2, color_t color) {
-    int x1 = pt_x(pt1);
-    int y1 = pt_y(pt1);
-    int x2 = pt_x(pt2);
-    int y2 = pt_y(pt2);
+void dr_draw_outline_ellipse(point_t p1, point_t p2, color_t color) {
+    int x1 = pt_x(p1);
+    int y1 = pt_y(p1);
+    int x2 = pt_x(p2);
+    int y2 = pt_y(p2);
     sort(x1, x2);
     sort(y1, y2);
 
@@ -57,7 +57,7 @@ void dr_draw_outline_ellipse(point_t pt1, point_t pt2, color_t color) {
     int y_even = (y1 ^ y2) & 1;
 
     if (rx == 0 || ry == 0) {
-        dr_draw_filled_rect(pt1, pt2, color);
+        dr_draw_filled_rect(p1, p2, color);
         return;
     }
     dri_mark_dirty_range(y1, y2);
@@ -110,11 +110,11 @@ void dr_draw_outline_ellipse(point_t pt1, point_t pt2, color_t color) {
     }
 }
 
-void dr_draw_filled_ellipse(point_t pt1, point_t pt2, color_t color) {
-    int x1 = pt_x(pt1);
-    int y1 = pt_y(pt1);
-    int x2 = pt_x(pt2);
-    int y2 = pt_y(pt2);
+void dr_draw_filled_ellipse(point_t p1, point_t p2, color_t color) {
+    int x1 = pt_x(p1);
+    int y1 = pt_y(p1);
+    int x2 = pt_x(p2);
+    int y2 = pt_y(p2);
     sort(x1, x2);
     sort(y1, y2);
 
@@ -126,7 +126,7 @@ void dr_draw_filled_ellipse(point_t pt1, point_t pt2, color_t color) {
     int y_even = (y1 ^ y2) & 1;
 
     if (rx == 0 || ry == 0) {
-        dr_draw_filled_rect(pt1, pt2, color);
+        dr_draw_filled_rect(p1, p2, color);
         return;
     }
     dri_mark_dirty_range(y1, y2);
