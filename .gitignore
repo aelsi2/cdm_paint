@@ -1,5 +1,6 @@
 llvm-project-cdm/
 build/
+publish/
 compile_commands.json
 *.jar
 .*

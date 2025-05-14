@@ -2,10 +2,10 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "make all",
+            "label": "make build",
             "type": "shell",
             "command": "make",
-            "args": [ "all" ],
+            "args": [ "build" ],
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -17,6 +17,16 @@
             "type": "shell",
             "command": "make",
             "args": [ "clean" ],
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "make publish",
+            "type": "shell",
+            "command": "make",
+            "args": [ "publish" ],
             "group": {
                 "kind": "build"
             },

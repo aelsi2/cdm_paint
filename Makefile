@@ -1,12 +1,19 @@
 BUILD_DIR := ./build
+PUBLISH_BASE_DIR := ./publish
 LOGISIM_DIR := ./logisim
 SRC_DIRS := ./src
 VENV_DIR := $(BUILD_DIR)/.venv
 TARGET_IMAGE := $(BUILD_DIR)/cdm_paint.img
 COMPILE_COMMANDS := compile_commands.json
+LOGISIM_PROJECT := $(LOGISIM_DIR)/project.circ
 CDM_PLUGINS += $(LOGISIM_DIR)/logisim-cdm-emulator-0.2.2.jar
 CDM_PLUGINS += $(LOGISIM_DIR)/logisim-banked-memory-0.2.2.jar
 TIME_PLUGIN := $(LOGISIM_DIR)/logisim-time-1.1-all.jar
+
+PUBLISH_ASSETS := $(LOGISIM_PROJECT) $(TARGET_IMAGE) $(CDM_PLUGINS) $(TIME_PLUGIN)
+PUBLISH_DIR := $(PUBLISH_BASE_DIR)/cdm_paint
+PUBLISH_TAR := $(PUBLISH_BASE_DIR)/cdm_paint.tar.gz
+PUBLISH_ZIP := $(PUBLISH_BASE_DIR)/cdm_paint.zip
 
 CDM_PLUGIN_URL := https://github.com/cdm-processors/cdm-devkit/releases/download/0.2.2/cdm-devkit-misc-0.2.2.tar.gz
 CC_URL := https://github.com/leadpogrommer/llvm-project-cdm/releases/download/cdm-ver-1.5/clang-cdm-ubuntu-latest.zip
@@ -28,14 +35,8 @@ INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 CFLAGS := $(INC_FLAGS) -MMD -MP -target cdm -O2 -S
 CC := $(BUILD_DIR)/clang-cdm
 
-.PHONY: all
-all: $(TARGET_IMAGE) $(COMPILE_COMMANDS) $(CDM_PLUGINS) $(TIME_PLUGIN)
-
-.PHONY: clean
-clean:
-	rm -f $(COMPILE_COMMANDS)
-	rm -rf $(BUILD_DIR)
-	rm -f $(LOGISIM_DIR)/*.jar
+.PHONY: build
+build: $(TARGET_IMAGE) $(COMPILE_COMMANDS) $(CDM_PLUGINS) $(TIME_PLUGIN)
 
 $(TARGET_IMAGE): $(ASMS) $(C_ASMS) $(VENV_DIR)/bin/cocas
 	$(VENV_DIR)/bin/cocas $(filter %.asm,$^) -o $@
@@ -73,5 +74,26 @@ $(CC): $(CC_ARCHIVE)
 
 $(CC_ARCHIVE):
 	curl -L $(CC_URL) --create-dirs -o $@
+
+.PHONY: publish
+publish: $(PUBLISH_ZIP) $(PUBLISH_TAR) $(PUBLISH_DIR)
+
+$(PUBLISH_ZIP): $(PUBLISH_DIR)
+	bsdtar -C $(dir $<) --format zip -cf $@ $(notdir $<)
+
+$(PUBLISH_TAR): $(PUBLISH_DIR)
+	tar -C $(dir $<) -czf $@ $(notdir $<)
+
+$(PUBLISH_DIR): $(PUBLISH_ASSETS)
+	mkdir -p $@
+	cp $^ $@
+	sed -i 's/"[^"]*\($(notdir $(TARGET_IMAGE))\)"/"\1"/g' $@/$(notdir $(LOGISIM_PROJECT))
+
+.PHONY: clean
+clean:
+	rm -f $(COMPILE_COMMANDS)
+	rm -rf $(BUILD_DIR)
+	rm -rf $(PUBLISH_BASE_DIR)
+	rm -f $(LOGISIM_DIR)/*.jar
 
 -include $(DEPS)
