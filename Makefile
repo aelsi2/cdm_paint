@@ -1,5 +1,5 @@
 BUILD_DIR := ./build
-PUBLISH_BASE_DIR := ./publish
+DIST_BASE_DIR := ./dist
 LOGISIM_DIR := ./logisim
 SRC_DIRS := ./src
 
@@ -10,10 +10,10 @@ TIME_PLUGIN := $(LOGISIM_DIR)/logisim-time-1.1-all.jar
 TARGET_IMAGE := $(BUILD_DIR)/cdm_paint.img
 COMPILE_COMMANDS := ./compile_commands.json
 
-PUBLISH_ASSETS := $(LOGISIM_PROJECT) $(TARGET_IMAGE) $(CDM_PLUGINS) $(TIME_PLUGIN)
-PUBLISH_DIR := $(PUBLISH_BASE_DIR)/cdm_paint
-PUBLISH_TAR := $(PUBLISH_BASE_DIR)/cdm_paint.tar.gz
-PUBLISH_ZIP := $(PUBLISH_BASE_DIR)/cdm_paint.zip
+DIST_ASSETS := $(LOGISIM_PROJECT) $(TARGET_IMAGE) $(CDM_PLUGINS) $(TIME_PLUGIN)
+DIST_DIR := $(DIST_BASE_DIR)/cdm_paint
+DIST_TAR := $(DIST_BASE_DIR)/cdm_paint.tar.gz
+DIST_ZIP := $(DIST_BASE_DIR)/cdm_paint.zip
 
 CDM_PLUGIN_URL := https://github.com/cdm-processors/cdm-devkit/releases/download/0.2.2/cdm-devkit-misc-0.2.2.tar.gz
 CC_URL := https://github.com/leadpogrommer/llvm-project-cdm/releases/download/cdm-ver-1.5/clang-cdm-ubuntu-latest.zip
@@ -36,8 +36,8 @@ CFLAGS := $(INC_FLAGS) -MMD -MP -target cdm -O2 -S
 CC := $(BUILD_DIR)/clang-cdm
 DOWNLOAD_CC := $(findstring $(origin CC),file)
 
-.PHONY: build
-build: $(TARGET_IMAGE) $(COMPILE_COMMANDS) $(CDM_PLUGINS) $(TIME_PLUGIN)
+.PHONY: all
+all: $(TARGET_IMAGE) $(COMPILE_COMMANDS) $(CDM_PLUGINS) $(TIME_PLUGIN)
 
 $(TARGET_IMAGE): $(ASMS) $(C_ASMS) $(if $(DOWNLOAD_ASM), $(ASM))
 	$(ASM) $(filter %.asm,$^) -o $@
@@ -76,16 +76,16 @@ $(CC): $(CC_ARCHIVE)
 $(CC_ARCHIVE):
 	curl -L $(CC_URL) --create-dirs -o $@
 
-.PHONY: publish
-publish: build $(PUBLISH_DIR) $(PUBLISH_ZIP) $(PUBLISH_TAR) 
+.PHONY: dist
+dist: all $(DIST_DIR) $(DIST_ZIP) $(DIST_TAR) 
 
-$(PUBLISH_ZIP): $(PUBLISH_DIR)
+$(DIST_ZIP): $(DIST_DIR)
 	bsdtar -C $(dir $<) --format zip -cf $@ $(notdir $<)
 
-$(PUBLISH_TAR): $(PUBLISH_DIR)
+$(DIST_TAR): $(DIST_DIR)
 	tar -C $(dir $<) -czf $@ $(notdir $<)
 
-$(PUBLISH_DIR): $(PUBLISH_ASSETS)
+$(DIST_DIR): $(DIST_ASSETS)
 	mkdir -p $@
 	cp $^ $@
 	sed -i 's/"[^"]*\($(notdir $(TARGET_IMAGE))\)"/"\1"/g' $@/$(notdir $(LOGISIM_PROJECT))
@@ -94,7 +94,7 @@ $(PUBLISH_DIR): $(PUBLISH_ASSETS)
 clean:
 	rm -f $(COMPILE_COMMANDS)
 	rm -rf $(BUILD_DIR)
-	rm -rf $(PUBLISH_BASE_DIR)
+	rm -rf $(DIST_BASE_DIR)
 	rm -f $(LOGISIM_DIR)/*.jar
 
 -include $(DEPS)
