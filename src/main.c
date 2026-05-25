@@ -1,3 +1,4 @@
+#include <cdm/ivt.h>
 #include "app/editor.h"
 #include "drawing/core.h"
 #include "drawing/shape.h"
@@ -29,7 +30,7 @@ inline static void update_ui() {
     display_set_secondary_cursor(editor_state->secondary_cursor_pos);
 }
 
-__attribute__((CDM_ISR)) void main() {
+ISR void main() {
     static dr_context_t ctx;
     static editor_state_t state;
     dr_context = &ctx;

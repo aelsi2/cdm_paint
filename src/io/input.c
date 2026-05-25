@@ -1,3 +1,4 @@
+#include <cdm/ivt.h>
 #include "io/input.h"
 
 #define REPEAT_TRANSITION_MAX 3
@@ -8,7 +9,7 @@ char is_repeating = 0;
 extern void timer_enable();
 extern void timer_disable();
 
-__attribute__((CDM_ISR)) void on_input_interrupt() {
+ISR void on_input_interrupt() {
     static buttons_t joy_old = 0;
     buttons_t joy_new = input_state;
 
@@ -29,7 +30,7 @@ __attribute__((CDM_ISR)) void on_input_interrupt() {
     joy_old = joy_new;
 }
 
-__attribute__((CDM_ISR)) void on_timer_interrupt() {
+ISR void on_timer_interrupt() {
     buttons_t joy_dirs = input_state & BTN_DIRECTION;
 
     if (is_repeating && joy_dirs) {
