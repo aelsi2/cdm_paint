@@ -2,7 +2,7 @@ BUILD_DIR := ./build
 DIST_BASE_DIR := ./dist
 LOGISIM_DIR := ./logisim
 SRC_DIRS := ./src
-LINKER_SCRIPT = ./link.ld
+LINKER_SCRIPT = ./memory.x
 
 LOGISIM_PROJECT := $(LOGISIM_DIR)/cdm_paint.circ
 CDM_PLUGINS += $(LOGISIM_DIR)/logisim-cdm-emulator-0.2.2.jar
@@ -21,16 +21,12 @@ TIME_PLUGIN_URL := https://github.com/aelsi2/logisim_time/releases/download/v1.1
 
 TARGET_BINARY = $(basename $(TARGET_IMAGE)).bin
 C_SOURCES := $(shell find $(SRC_DIRS) -name '*.c')
-ASM_SOURCES := $(shell find $(SRC_DIRS) -name '*.asm')
 C_OBJECTS := $(C_SOURCES:%=$(BUILD_DIR)/%.o)
-ASM_OBJECTS := $(ASM_SOURCES:%=$(BUILD_DIR)/%.o)
 COMMANDS := $(C_SOURCES:%=$(BUILD_DIR)/%.o.command)
 
 CC := clang
 INC_FLAGS := $(addprefix -I,$(shell find $(SRC_DIRS) -type d))
-CFLAGS := -ffreestanding -O2 -MMD -MP $(INC_FLAGS)
-LDFLAGS := -T$(LINKER_SCRIPT)
-LLVM_FLAGS := -target cdm
+CFLAGS := -ffreestanding -O2 -MMD -MP $(INC_FLAGS) -target cdm
 
 .PHONY: all
 all: $(TARGET_IMAGE) $(COMPILE_COMMANDS) $(CDM_PLUGINS) $(TIME_PLUGIN)
@@ -39,16 +35,12 @@ $(TARGET_IMAGE): $(TARGET_BINARY)
 	echo 'v2.0 raw' > $@
 	od -tx1 -An -v $< | tr -s '[:blank:]' '\n' >> $@
 
-$(TARGET_BINARY): $(ASM_OBJECTS) $(C_OBJECTS) $(LINKER_SCRIPT)
-	$(CC) $(LLVM_FLAGS) $(CFLAGS) $(LDFLAGS) $(filter %.o, $^) -o $@
+$(TARGET_BINARY): $(C_OBJECTS) $(LINKER_SCRIPT)
+	$(LINK.c) $(LINKER_SCRIPT) $(filter %.o, $^) -o $@
 
 $(C_OBJECTS): $(BUILD_DIR)/%.o: %
-	mkdir -p $(dir $@)
-	$(CC) $(LLVM_FLAGS) $(CFLAGS) -c $< -o $@ -MJ $@.command
-
-$(ASM_OBJECTS): $(BUILD_DIR)/%.o: %
-	mkdir -p $(dir $@)
-	$(CC) $(LLVM_FLAGS) -c $< -o $@
+	@mkdir -p $(dir $@)
+	$(COMPILE.c) $< -o $@ -MJ $@.command
 
 $(COMPILE_COMMANDS): $(COMMANDS)
 	rm -f $@

@@ -6,8 +6,25 @@
 int repeat_transition_counter;
 char is_repeating = 0;
 
-extern void timer_enable();
-extern void timer_disable();
+__attribute__((naked))
+static void timer_enable() {
+    __asm__ (
+        "ldi r0, 1\n"
+        "ldi r1, timer_state\n"
+        "stb r1, r0\n"
+        "rts\n"
+    );
+}
+
+__attribute__((naked))
+static void timer_disable() {
+    __asm__ (
+        "ldi r0, 0\n"
+        "ldi r1, timer_state\n"
+        "stb r1, r0\n"
+        "rts\n"
+    );
+}
 
 ISR void on_input_interrupt() {
     static buttons_t joy_old = 0;

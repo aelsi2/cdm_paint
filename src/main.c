@@ -1,10 +1,20 @@
 #include <cdm/ivt.h>
+#include <cdm/interrupt.h>
+
 #include "app/editor.h"
 #include "drawing/core.h"
 #include "drawing/shape.h"
 #include "io/display.h"
 #include "io/menu.h"
 #include "io/input.h"
+
+ISR void on_input_interrupt(void);
+ISR void on_timer_interrupt(void);
+
+INTERRUPT_VECTORS(
+    VECTOR(on_input_interrupt, 0),
+    VECTOR(on_timer_interrupt, 0)
+);
 
 inline static void update_screen() {
     display_write_range(dr_context->frame_buffer, dr_context->dirty_start, dr_context->dirty_end);
@@ -40,6 +50,7 @@ ISR void main() {
     editor_init();
 
     update_ui();
+    int_enable();
 
     shape_t shape;
     while (1) {
