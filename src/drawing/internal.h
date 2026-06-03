@@ -9,18 +9,18 @@
  * Contains bit masks with (index) most significant bits set to 0,
  * and others set to 1.
  */
-extern const block_t dri_mask_left[PIXELS_PER_BLOCK];
+__progmem extern const block_t dri_mask_left[PIXELS_PER_BLOCK];
 
 /*
  * Contains bit masks with (index + 1) most significant bits set to 1,
  * and others set to 0.
  */
-extern const block_t dri_mask_right[PIXELS_PER_BLOCK];
+__progmem extern const block_t dri_mask_right[PIXELS_PER_BLOCK];
 
 /*
  * Contains bit masks with the (index)-th pixel set to 1, and others set to 0.
  */
-extern const block_t dri_mask_pixel[PIXELS_PER_BLOCK];
+__progmem extern const block_t dri_mask_pixel[PIXELS_PER_BLOCK];
 
 // Marks the specified line range as dirty. Both bounds are inclusive.
 inline static void dri_mark_dirty_range(int start, int end) {
