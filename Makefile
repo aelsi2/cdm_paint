@@ -26,8 +26,7 @@ COMMANDS := $(C_SOURCES:%=$(BUILD_DIR)/%.o.command)
 
 CC := clang
 INC_FLAGS := $(addprefix -I,$(shell find $(SRC_DIRS) -type d))
-CFLAGS := -ffreestanding -O2 -MMD -MP $(INC_FLAGS) -target cdm
-LDFLAGS := -mmem-model=harvard
+CFLAGS := -ffreestanding -O2 -MMD -MP $(INC_FLAGS) --target=cdm -mmem-model=harvard
 
 .PHONY: all
 all: $(TARGET_IMAGE) $(COMPILE_COMMANDS) $(CDM_PLUGINS) $(TIME_PLUGIN)
