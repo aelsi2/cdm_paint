@@ -8,4 +8,3 @@ cursor2_position = 0x108;
 menu_data = 0x10a;
 menu_cursor_position = 0x10b;
 input_state = 0x10c;
-
