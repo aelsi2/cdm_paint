@@ -24,7 +24,7 @@ C_SOURCES := $(shell find $(SRC_DIRS) -name '*.c')
 C_OBJECTS := $(C_SOURCES:%=$(BUILD_DIR)/%.o)
 COMMANDS := $(C_SOURCES:%=$(BUILD_DIR)/%.o.command)
 
-CC := clang
+CC := clang-cdm
 INC_FLAGS := $(addprefix -I,$(shell find $(SRC_DIRS) -type d))
 CFLAGS := -ffreestanding -O2 -MMD -MP $(INC_FLAGS) --target=cdm -mmem-model=vonNeumann
 
@@ -32,7 +32,7 @@ CFLAGS := -ffreestanding -O2 -MMD -MP $(INC_FLAGS) --target=cdm -mmem-model=vonN
 all: $(TARGET_IMAGE) $(COMPILE_COMMANDS) $(CDM_PLUGINS) $(TIME_PLUGIN)
 
 $(TARGET_IMAGE): $(TARGET_BINARY)
-	llvm-objcopy -O logisim $< $@
+	llvm-objcopy-cdm -O logisim $< $@
 
 $(TARGET_BINARY): $(C_OBJECTS) $(LINKER_SCRIPT)
 	$(LINK.c) $(LINKER_SCRIPT) $(filter %.o, $^) -o $@
