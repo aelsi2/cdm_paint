@@ -24,7 +24,7 @@ C_OBJECTS := $(C_SOURCES:%=$(BUILD_DIR)/%.o)
 ASM_OBJECTS := $(ASM_SOURCES:%=$(BUILD_DIR)/%.o)
 COMMANDS := $(C_SOURCES:%=$(BUILD_DIR)/%.o.command)
 
-CC := clang
+CC := clang-cdm
 INC_FLAGS := $(addprefix -I,$(shell find $(SRC_DIRS) -type d))
 CFLAGS := -target cdm-cocas -ffreestanding -O2 -MMD -MP $(INC_FLAGS) 
 LDFLAGS := -nostartfiles
