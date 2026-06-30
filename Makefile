@@ -35,11 +35,11 @@ $(TARGET_IMAGE): $(TARGET_BINARY)
 	llvm-objcopy-cdm -O logisim $< $@
 
 $(TARGET_BINARY): $(C_OBJECTS) $(LINKER_SCRIPT)
-	$(LINK.c) $(LINKER_SCRIPT) $(filter %.o, $^) -o $@
+	$(LINK.c) -o $@ $^
 
 $(C_OBJECTS): $(BUILD_DIR)/%.o: %
 	@mkdir -p $(dir $@)
-	$(COMPILE.c) $< -o $@ -MJ $@.command
+	$(COMPILE.c) -MJ $@.command -o $@ $<
 
 $(COMPILE_COMMANDS): $(COMMANDS)
 	rm -f $@
