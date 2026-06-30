@@ -33,15 +33,15 @@ LDFLAGS := -nostartfiles
 all: $(TARGET_IMAGE) $(COMPILE_COMMANDS) $(CDM_PLUGINS) $(TIME_PLUGIN)
 
 $(TARGET_IMAGE): $(ASM_OBJECTS) $(C_OBJECTS)
-	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
+	$(LINK.c) -o $@ $^ 
 
 $(C_OBJECTS): $(BUILD_DIR)/%.o: %
-	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@ -MJ $@.command 
+	@mkdir -p $(dir $@)
+	$(COMPILE.c) -MJ $@.command -o $@ $<
 
 $(ASM_OBJECTS): $(BUILD_DIR)/%.o: %
-	mkdir -p $(dir $@)
-	$(CC) -c $< -o $@
+	@mkdir -p $(dir $@)
+	$(COMPILE.S) -o $@ $<
 
 $(COMPILE_COMMANDS): $(COMMANDS)
 	rm -f $@
@@ -52,10 +52,10 @@ $(COMPILE_COMMANDS): $(COMMANDS)
 $(COMMANDS): %.command: % ;
 
 $(CDM_PLUGINS):
-	curl -L $(CDM_PLUGIN_URL) | tar -xzOf - jar/$(notdir $@) > $@
+	curl --no-progress-meter -L $(CDM_PLUGIN_URL) | tar -xzOf - jar/$(notdir $@) > $@
 
 $(TIME_PLUGIN):
-	curl -L $(TIME_PLUGIN_URL) --create-dirs -o $@
+	curl --no-progress-meter -L $(TIME_PLUGIN_URL) --create-dirs -o $@
 
 .PHONY: dist
 dist: all $(DIST_DIR) $(DIST_ZIP) $(DIST_TAR) 
