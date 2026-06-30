@@ -22,9 +22,15 @@ typedef enum : unsigned char {
 /*
  * Sets the contents of the tool menu display.
  */
-void menu_set_data(menu_data_t data);
+inline static void menu_set_data(menu_data_t data) {
+    extern volatile char menu_data;
+    menu_data = data;
+}
 
 /*
  * Sets the position of the tool menu display's cursor.
  */
-void menu_set_cursor(char position);
+inline static void menu_set_cursor(char position) {
+    extern volatile char menu_cursor_position;
+    menu_cursor_position = position;
+}
