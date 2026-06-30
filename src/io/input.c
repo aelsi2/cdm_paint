@@ -6,25 +6,7 @@
 int repeat_transition_counter;
 char is_repeating = 0;
 
-__attribute__((naked))
-static void timer_enable() {
-    __asm__ (
-        "ldi r0, 1\n"
-        "ldi r1, timer_state\n"
-        "stb r1, r0\n"
-        "rts\n"
-    );
-}
-
-__attribute__((naked))
-static void timer_disable() {
-    __asm__ (
-        "ldi r0, 0\n"
-        "ldi r1, timer_state\n"
-        "stb r1, r0\n"
-        "rts\n"
-    );
-}
+extern volatile char timer_state;
 
 ISR void on_input_interrupt() {
     static buttons_t joy_old = 0;
@@ -39,7 +21,7 @@ ISR void on_input_interrupt() {
             on_user_input(joy_dirs);
             repeat_transition_counter = REPEAT_TRANSITION_MAX;
         }
-        timer_enable();
+        timer_state = 1;
     }
     if (joy_actions) {
         on_user_input(joy_actions);
@@ -59,7 +41,7 @@ ISR void on_timer_interrupt() {
         repeat_transition_counter--;
     } else if (is_repeating) {
         is_repeating = 0;
-        timer_disable();
+        timer_state = 0;
     } else {
         is_repeating = 1;
     }
