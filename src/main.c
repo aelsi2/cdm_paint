@@ -30,7 +30,7 @@ inline static void update_ui() {
     display_set_secondary_cursor(editor_state->secondary_cursor_pos);
 }
 
-ISR void main() {
+int main() {
     static dr_context_t ctx;
     static editor_state_t state;
     dr_context = &ctx;
@@ -48,6 +48,7 @@ ISR void main() {
             update_screen();
         }
     }
+    return 0;
 }
 
 void on_user_input(buttons_t buttons) {

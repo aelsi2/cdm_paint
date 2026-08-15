@@ -8,7 +8,7 @@ char is_repeating = 0;
 
 extern volatile char timer_state;
 
-ISR void on_input_interrupt() {
+ISR void on_input_interrupt(context_t *ctx) {
     static buttons_t joy_old = 0;
     buttons_t joy_new = input_state;
 
@@ -29,7 +29,7 @@ ISR void on_input_interrupt() {
     joy_old = joy_new;
 }
 
-ISR void on_timer_interrupt() {
+ISR void on_timer_interrupt(context_t *ctx) {
     buttons_t joy_dirs = input_state & BTN_DIRECTION;
 
     if (is_repeating && joy_dirs) {
