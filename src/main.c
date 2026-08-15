@@ -8,8 +8,8 @@
 #include "io/menu.h"
 #include "io/input.h"
 
-ISR void on_input_interrupt(void);
-ISR void on_timer_interrupt(void);
+extern isr_t on_input_interrupt;
+extern isr_t on_timer_interrupt;
 
 INTERRUPT_VECTORS(
     VECTOR(on_input_interrupt, 0),
@@ -40,7 +40,7 @@ inline static void update_ui() {
     display_set_secondary_cursor(editor_state->secondary_cursor_pos);
 }
 
-ISR void main() {
+int main() {
     static dr_context_t ctx;
     static editor_state_t state;
     dr_context = &ctx;
@@ -59,6 +59,7 @@ ISR void main() {
             update_screen();
         }
     }
+    return 0;
 }
 
 void on_user_input(buttons_t buttons) {
